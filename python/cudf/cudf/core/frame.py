@@ -591,24 +591,6 @@ class Frame(BinaryOperand, Scannable):
         3    <NA>
         4    <NA>
         dtype: int64
-
-        .. pandas-compat::
-            **DataFrame.where, Series.where**
-
-            Note that ``where`` treats missing values as falsy,
-            in parallel with pandas treatment of nullable data:
-
-            >>> gsr = cudf.Series([1, 2, 3])
-            >>> gsr.where([True, False, cudf.NA])
-            0       1
-            1    <NA>
-            2    <NA>
-            dtype: int64
-            >>> gsr.where([True, False, False])
-            0       1
-            1    <NA>
-            2    <NA>
-            dtype: int64
         """
         raise NotImplementedError
 
@@ -1706,11 +1688,6 @@ class Frame(BinaryOperand, Scannable):
         dtype: int64
         >>> min_series.min()
         1
-
-        .. pandas-compat::
-            **DataFrame.min, Series.min**
-
-            Parameters currently not supported are `level`, `numeric_only`.
         """
         return self._reduce(
             "min",
@@ -1754,11 +1731,6 @@ class Frame(BinaryOperand, Scannable):
         a     4
         b    10
         dtype: int64
-
-        .. pandas-compat::
-            **DataFrame.max, Series.max**
-
-            Parameters currently not supported are `level`, `numeric_only`.
         """
         return self._reduce(
             "max",
@@ -1807,18 +1779,6 @@ class Frame(BinaryOperand, Scannable):
         a     True
         b    False
         dtype: bool
-
-        .. pandas-compat::
-            **DataFrame.all, Series.all**
-
-            Parameters currently not supported are `axis`, `bool_only`,
-            `level`.
-
-        .. pandas-compat::
-            **DataFrame.all, Series.all**
-
-            Parameters currently not supported are `axis`, `bool_only`,
-            `level`.
         """
         return self._reduce(
             "all",
@@ -1866,18 +1826,6 @@ class Frame(BinaryOperand, Scannable):
         a    True
         b    True
         dtype: bool
-
-        .. pandas-compat::
-            **DataFrame.any, Series.any**
-
-            Parameters currently not supported are `axis`, `bool_only`,
-            `level`.
-
-        .. pandas-compat::
-            **DataFrame.any, Series.any**
-
-            Parameters currently not supported are `axis`, `bool_only`,
-            `level`.
         """
         return self._reduce(
             "any",

@@ -115,7 +115,7 @@ Any attempt to write pure Cython code for this purpose should be justified with 
 
 ## Exception handling
 
-In alignment with [maintaining compatibility with pandas](#pandas-compatibility),
+In alignment with maintaining compatibility with pandas,
 any API that cuDF shares with pandas should throw all the same exceptions as the
 corresponding pandas API given the same inputs.
 However, it is not required to match the corresponding pandas API's exception message.

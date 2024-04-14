@@ -735,11 +735,6 @@ class GroupBy(Serializable, Reducible, Scannable):
         -------
         Series or DataFrame
             Computed {op} of values within each group.
-
-        .. pandas-compat::
-            **{cls}.{op}**
-
-            The numeric_only, min_count
         """
         if min_count != 0:
             raise NotImplementedError(
@@ -1473,32 +1468,6 @@ class GroupBy(Serializable, Reducible, Scannable):
           4    2    4    8
           5    2    5   10
           6    2    6   12
-
-        .. pandas-compat::
-            **GroupBy.apply**
-
-            cuDF's ``groupby.apply`` is limited compared to pandas.
-            In some situations, Pandas returns the grouped keys as part of
-            the index while cudf does not due to redundancy. For example:
-
-            .. code-block::
-
-                >>> import pandas as pd
-                >>> df = pd.DataFrame({
-                ...     'a': [1, 1, 2, 2],
-                ...     'b': [1, 2, 1, 2],
-                ...     'c': [1, 2, 3, 4],
-                ... })
-                >>> gdf = cudf.from_pandas(df)
-                >>> df.groupby('a')[["b", "c"]].apply(lambda x: x.iloc[[0]])
-                     b  c
-                a
-                1 0  1  1
-                2 2  1  3
-                >>> gdf.groupby('a')[["b", "c"]].apply(lambda x: x.iloc[[0]])
-                   b  c
-                0  1  1
-                2  1  3
 
         ``engine='jit'`` may be used to accelerate certain functions,
         initially those that contain reductions and arithmetic operations
@@ -2338,11 +2307,6 @@ class GroupBy(Serializable, Reducible, Scannable):
         -------
         Series or DataFrame
             Object shifted within each group.
-
-        .. pandas-compat::
-            **GroupBy.shift**
-
-            Parameter ``freq`` is unsupported.
         """
 
         if freq is not None:

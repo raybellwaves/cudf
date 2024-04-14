@@ -2710,6 +2710,8 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         having no value in the previous index. A new object is produced
         unless the new index is equivalent to the current one and copy=False.
 
+        See :func:`pandas.DataFrame.reindex`.
+
         Parameters
         ----------
         labels : Index, Series-convertible, optional, default None
@@ -2763,14 +2765,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         Comodo Dragon        <NA>          <NA>
         IE10                  404          0.08
         Chrome                200          0.02
-
-        .. pandas-compat::
-            **DataFrame.reindex**
-
-            Note: One difference from Pandas is that ``NA`` is used for rows
-            that do not match, rather than ``NaN``. One side effect of this is
-            that the column ``http_status`` retains an integer dtype in cuDF
-            where it is cast to float in Pandas.
 
         We can fill in the missing values by
         passing a value to the keyword ``fill_value``.
@@ -3347,11 +3341,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         3     2     2    12
         4     2     3    16
         5     2     5    20
-
-        .. pandas-compat::
-            **DataFrame.diff**
-
-            Diff currently only supports numeric dtype columns.
         """
         if not isinstance(periods, int):
             if not (isinstance(periods, float) and periods.is_integer()):
@@ -3552,15 +3541,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         10  1  4
         20  2  5
         30  3  6
-
-        .. pandas-compat::
-            **DataFrame.rename**
-
-            * Not Supporting: level
-
-            Rename will not overwrite column names. If a list with
-            duplicates is passed, column names will be postfixed
-            with a number.
         """
         if errors != "ignore":
             raise NotImplementedError(
@@ -3663,12 +3643,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
             ``Series`` is returned.
             When ``DataFrame.agg`` is called with several aggs,
             ``DataFrame`` is returned.
-
-        .. pandas-compat::
-            **DataFrame.agg**
-
-            * Not supporting: ``axis``, ``*args``, ``**kwargs``
-
         """
         dtypes = [self[col].dtype for col in self._column_names]
         common_dtype = find_common_type(dtypes)
@@ -3836,11 +3810,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         France    65000000  2583560      FR
         Italy     59000000  1937894      IT
         Brunei      434000    12128      BN
-
-        .. pandas-compat::
-            **DataFrame.nlargest**
-
-            - Only a single column is supported in *columns*
         """
         return self._n_largest_or_smallest(True, n, columns, keep)
 
@@ -3908,11 +3877,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         Anguilla       11300  311      AI
         Tuvalu         11300   38      TV
         Nauru         337000  182      NR
-
-        .. pandas-compat::
-            **DataFrame.nsmallest**
-
-            - Only a single column is supported in *columns*
         """
         return self._n_largest_or_smallest(False, n, columns, keep)
 
@@ -3989,12 +3953,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         Returns
         -------
         a new (ncol x nrow) dataframe. self is (nrow x ncol)
-
-        .. pandas-compat::
-            **DataFrame.transpose, DataFrame.T**
-
-            Not supporting *copy* because default and only behavior is
-            copy=True
         """
         index = self._data.to_pandas_index()
         columns = self.index.copy(deep=False)
@@ -4180,12 +4138,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         right dtype respectively. This extends to semi and anti joins.
         - For outer joins, the result will be the union of categories
         from both sides.
-
-        .. pandas-compat::
-            **DataFrame.merge**
-
-            DataFrames merges in cuDF result in non-deterministic row
-            ordering.
         """
         if indicator:
             raise NotImplementedError(
@@ -4255,12 +4207,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         Returns
         -------
         joined : DataFrame
-
-        .. pandas-compat::
-            **DataFrame.join**
-
-            - *other* must be a single DataFrame for now.
-            - *on* is not supported yet due to lack of multi-index support.
         """
         if on is not None:
             raise NotImplementedError("The on parameter is not yet supported")
@@ -4377,12 +4323,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         ...          local_dict={'search_date': search_date2})
            datetimes
         1 2018-10-08
-
-        .. pandas-compat::
-            **DataFrame.query**
-
-            One difference from pandas is that ``query`` currently only
-            supports numeric, datetime, timedelta, or bool dtypes.
         """
         # can't use `annotate` decorator here as we inspect the calling
         # environment.
@@ -5441,12 +5381,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         0  1  4
         1  2  5
         2  3  6
-
-        .. pandas-compat::
-            **DataFrame.from_arrow**
-
-            -   Does not support automatically setting index column(s) similar
-                to how ``to_pandas`` works for PyArrow Tables.
         """
         index_col = None
         col_index_names = None
@@ -5831,14 +5765,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
                a     b
         0.1  1.3   3.7
         0.5  2.5  55.0
-
-        .. pandas-compat::
-            **DataFrame.quantile**
-
-            One notable difference from Pandas is when DataFrame is of
-            non-numeric types and result is expected to be a Series in case of
-            Pandas. cuDF will return a DataFrame as it doesn't support mixed
-            types under Series.
         """  # noqa: E501
         if axis not in (0, None):
             raise NotImplementedError("axis is not implemented yet")
@@ -6121,11 +6047,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         Age       4
         Single    5
         dtype: int64
-
-        .. pandas-compat::
-            **DataFrame.count**
-
-            Parameters currently not supported are `axis` and `numeric_only`.
         """
         axis = self._get_axis_from_axis_arg(axis)
         if axis != 0:
@@ -6359,11 +6280,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
            legs  wings
         0     2    0.0
         1  <NA>    2.0
-
-        .. pandas-compat::
-            **DataFrame.mode**
-
-            ``axis`` parameter is currently not supported.
         """
         if axis not in (0, "index"):
             raise NotImplementedError("Only axis=0 is currently supported")
@@ -7637,22 +7553,6 @@ class DataFrame(IndexedFrame, Serializable, GetAttrGetItemMixin):
         2  3   6   9 -3
         3  4   4   8  0
         4  5   2   7  3
-
-        .. pandas-compat::
-            **DataFrame.eval**
-
-            * Additional kwargs are not supported.
-            * Bitwise and logical operators are not dtype-dependent.
-              Specifically, `&` must be used for bitwise operators on integers,
-              not `and`, which is specifically for the logical and between
-              booleans.
-            * Only numerical types are currently supported.
-            * Operators generally will not cast automatically. Users are
-              responsible for casting columns to suitable types before
-              evaluating a function.
-            * Multiple assignments to the same name (i.e. a sequence of
-              assignment statements where later statements are conditioned upon
-              the output of earlier statements) is not supported.
         """
         if kwargs:
             raise ValueError(

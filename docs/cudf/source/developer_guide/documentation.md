@@ -150,27 +150,6 @@ To accommodate these requirements, we take the following approach:
 
 ```
 
-## Comparing to pandas
-
-cuDF aims to provide a pandas-like experience.
-However, for various reasons cuDF APIs may exhibit differences from pandas.
-Where such differences exist, they should be documented.
-We facilitate such documentation with the `pandas-compat` directive.
-The directive should be used inside docstrings like so:
-
-```
-"""Brief
-
-Docstring body
-
-.. pandas-compat::
-    **$API_NAME**
-
-    Explanation of differences
-```
-
-All such API compatibility notes are collected and displayed in the rendered documentation.
-
 ## Writing documentation pages
 
 In addition to docstrings, our docs also contain a number of more dedicated user guides.

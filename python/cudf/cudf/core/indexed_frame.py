@@ -498,12 +498,6 @@ class IndexedFrame(Frame):
         Series([], dtype: float64)
         >>> s.empty
         True
-
-        .. pandas-compat::
-            **DataFrame.empty, Series.empty**
-
-            If DataFrame/Series contains only `null` values, it is still not
-            considered empty. See the example above.
         """
         return self.size == 0
 
@@ -832,12 +826,6 @@ class IndexedFrame(Frame):
         2    2    7  c
         3    3    8  d
         4    4    9  e
-
-        .. pandas-compat::
-            **DataFrame.replace, Series.replace**
-
-            Parameters that are currently not supported are: `limit`, `regex`,
-            `method`
         """
         if limit is not None:
             raise NotImplementedError("limit parameter is not implemented yet")
@@ -1371,11 +1359,6 @@ class IndexedFrame(Frame):
         a    10
         b    34
         dtype: int64
-
-        .. pandas-compat::
-            **DataFrame.sum, Series.sum**
-
-            Parameters currently not supported are `level`, `numeric_only`.
         """
         return self._reduce(
             "sum",
@@ -1432,11 +1415,6 @@ class IndexedFrame(Frame):
         a      24
         b    5040
         dtype: int64
-
-        .. pandas-compat::
-            **DataFrame.product, Series.product**
-
-            Parameters currently not supported are level`, `numeric_only`.
         """
 
         return self._reduce(
@@ -1529,16 +1507,6 @@ class IndexedFrame(Frame):
         dtype: int64
         >>> ser.median()
         17.0
-
-        .. pandas-compat::
-            **DataFrame.median, Series.median**
-
-            Parameters currently not supported are `level` and `numeric_only`.
-
-        .. pandas-compat::
-            **DataFrame.median, Series.median**
-
-            Parameters currently not supported are `level` and `numeric_only`.
         """
         return self._reduce(
             "median",
@@ -1590,12 +1558,6 @@ class IndexedFrame(Frame):
         a    1.290994
         b    1.290994
         dtype: float64
-
-        .. pandas-compat::
-            **DataFrame.std, Series.std**
-
-            Parameters currently not supported are `level` and
-            `numeric_only`
         """
 
         return self._reduce(
@@ -1649,12 +1611,6 @@ class IndexedFrame(Frame):
         a    1.666667
         b    1.666667
         dtype: float64
-
-        .. pandas-compat::
-            **DataFrame.var, Series.var**
-
-            Parameters currently not supported are `level` and
-            `numeric_only`
         """
         return self._reduce(
             "var",
@@ -1705,11 +1661,6 @@ class IndexedFrame(Frame):
         a   -1.2
         b   -1.2
         dtype: float64
-
-        .. pandas-compat::
-            **DataFrame.kurtosis**
-
-            Parameters currently not supported are `level` and `numeric_only`
         """
         if axis not in (0, "index", None, no_default):
             raise NotImplementedError("Only axis=0 is currently supported.")
@@ -1767,11 +1718,6 @@ class IndexedFrame(Frame):
         a    0.00000
         b   -0.37037
         dtype: float64
-
-        .. pandas-compat::
-            **DataFrame.skew, Series.skew, Frame.skew**
-
-            The `axis` parameter is not currently supported.
         """
         if axis not in (0, "index", None, no_default):
             raise NotImplementedError("Only axis=0 is currently supported.")
@@ -2237,13 +2183,6 @@ class IndexedFrame(Frame):
         2021-01-01 23:45:25  1  2
         2021-01-01 23:45:26  1  2
         2021-01-01 23:45:27  1  2
-
-        .. pandas-compat::
-            **DataFrame.truncate, Series.truncate**
-
-            The ``copy`` parameter is only present for API compatibility, but
-            ``copy=False`` is not supported. This method always generates a
-            copy.
         """
         if not copy:
             raise ValueError("Truncating with copy=False is not supported.")
@@ -2673,11 +2612,6 @@ class IndexedFrame(Frame):
         1  2  3
         3  1  2
         2  3  1
-
-        .. pandas-compat::
-            **DataFrame.sort_index, Series.sort_index**
-
-            * Not supporting: kind, sort_remaining=False
         """
         if kind is not None:
             raise NotImplementedError("kind is not yet supported")
@@ -3517,12 +3451,6 @@ class IndexedFrame(Frame):
         0  0 -3
         2  2  0
         1  1  2
-
-        .. pandas-compat::
-            **DataFrame.sort_values, Series.sort_values**
-
-            * Support axis='index' only.
-            * Not supporting: inplace, kind
         """
         if na_position not in {"first", "last"}:
             raise ValueError(f"invalid na_position: {na_position}")
@@ -4044,16 +3972,6 @@ class IndexedFrame(Frame):
         week_starting
         2018-01-31      11.4  60.000000
         2018-02-28      18.0  63.333333
-
-
-        .. pandas-compat::
-            **DataFrame.resample, Series.resample**
-
-            Note that the dtype of the index (or the 'on' column if using
-            'on=') in the result will be of a frequency closest to the
-            resampled frequency.  For example, if resampling from
-            nanoseconds to milliseconds, the index will be of dtype
-            'datetime64[ms]'.
         """
         import cudf.core.resample
 
@@ -4616,20 +4534,6 @@ class IndexedFrame(Frame):
            a  c
         0  1  3
         1  2  4
-
-        .. pandas-compat::
-            **DataFrame.sample, Series.sample**
-
-            When sampling from ``axis=0/'index'``, ``random_state`` can be
-            either a numpy random state (``numpy.random.RandomState``)
-            or a cupy random state (``cupy.random.RandomState``). When a numpy
-            random state is used, the output is guaranteed to match the output
-            of the corresponding pandas method call, but generating the sample
-            maybe slow. If exact pandas equivalence is not required, using a
-            cupy random state will achieve better performance,
-            especially when sampling large number of
-            items. It's advised to use the matching `ndarray` type to
-            the random state for the `weights` array.
         """
         axis = 0 if axis is None else self._get_axis_from_axis_arg(axis)
         size = self.shape[axis]

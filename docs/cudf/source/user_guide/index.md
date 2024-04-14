@@ -14,7 +14,6 @@ guide-to-udfs
 cupy-interop
 options
 performance-comparisons/index
-PandasCompat
 copy-on-write
 pandas-2.0-breaking-changes
 ```

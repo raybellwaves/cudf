@@ -990,15 +990,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         y    <NA>
         z    <NA>
         dtype: int64
-
-        .. pandas-compat::
-            **Series.reindex**
-
-            Note: One difference from Pandas is that ``NA`` is used for rows
-            that do not match, rather than ``NaN``. One side effect of this is
-            that the series retains an integer dtype in cuDF
-            where it is cast to float in Pandas.
-
         """
         if len(args) > 1:
             raise TypeError(
@@ -1273,12 +1264,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         3       16
         4     <NA>
         dtype: int64
-
-        .. pandas-compat::
-            **Series.map**
-
-            Please note map currently only supports fixed-width numeric
-            type functions.
         """
         if isinstance(arg, dict):
             if hasattr(arg, "__missing__"):
@@ -2145,12 +2130,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         3    4
         1    5
         dtype: int64
-
-        .. pandas-compat::
-            **Series.sort_values**
-
-            * Support axis='index' only.
-            * The inplace and kind argument is currently unsupported
         """
         return super().sort_values(
             by=self.name,
@@ -2601,11 +2580,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         >>> ser = cudf.Series([1, 5, 2, 4, 3])
         >>> ser.count()
         5
-
-        .. pandas-compat::
-            **Series.count**
-
-            Parameters currently not supported is `level`.
         """
         return self.valid_count
 
@@ -2712,11 +2686,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         >>> ser2 = cudf.Series([0.12, 0.26, 0.51])
         >>> ser1.cov(ser2)
         -0.015750000000000004
-
-        .. pandas-compat::
-            **Series.cov**
-
-            `min_periods` parameter is not yet supported.
         """
 
         if min_periods is not None:
@@ -3471,12 +3440,6 @@ class Series(SingleColumnFrame, IndexedFrame, Serializable):
         Name: numeric_series, dtype: int64
         >>> renamed_series.name
         'numeric_series'
-
-        .. pandas-compat::
-            **Series.rename**
-
-            - Supports scalar values only for changing name attribute
-            - The ``inplace`` and ``level`` is not supported
         """
         out_data = self._data.copy(deep=copy)
         return Series._from_data(out_data, self.index, name=index)
@@ -4716,12 +4679,6 @@ class DatetimeProperties:
         1    2000 / 30 / 06
         2    2000 / 30 / 09
         dtype: object
-
-        .. pandas-compat::
-            **series.DatetimeProperties.strftime**
-
-            The following date format identifiers are not yet
-            supported: ``%c``, ``%x``,``%X``
         """
 
         if not isinstance(date_format, str):
